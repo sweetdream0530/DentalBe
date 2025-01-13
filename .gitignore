@@ -1,0 +1,4 @@
+Backend/.pytest_cache
+Backend/env
+Backend/Media
+Backend/notes/__pycache__
