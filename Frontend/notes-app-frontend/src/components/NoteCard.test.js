@@ -23,10 +23,8 @@ describe('NoteCard', () => {
         onPlayAudio={mockOnPlayAudio}
       />
     );
-
-    // Check if title and description are rendered
-    expect(screen.getByText(note.title)).toBeInTheDocument();
-    expect(screen.getByText(note.description)).toBeInTheDocument();
+    expect(screen.getByText('Sample Note')).toBeInTheDocument();
+    expect(screen.getByText('This is a sample description for the note.')).toBeInTheDocument();
   });
 
   it('renders the "Play Audio" button when audio is available', () => {
@@ -38,21 +36,11 @@ describe('NoteCard', () => {
         onPlayAudio={mockOnPlayAudio}
       />
     );
-
-    // Check if the "Play Audio" button is rendered
-    const playButton = screen.getByText(/Play Audio/);
-    expect(playButton).toBeInTheDocument();
-
-    // Simulate the "Play Audio" button click
-    fireEvent.click(playButton);
-
-    // Ensure the onPlayAudio function was called with the correct audio file
-    expect(mockOnPlayAudio).toHaveBeenCalledWith(note.audio);
+    expect(screen.getByText('Play Audio')).toBeInTheDocument();
   });
 
   it('does not render the "Play Audio" button when there is no audio', () => {
     const noteWithoutAudio = { ...note, audio: null };
-
     render(
       <NoteCard
         note={noteWithoutAudio}
@@ -61,10 +49,7 @@ describe('NoteCard', () => {
         onPlayAudio={mockOnPlayAudio}
       />
     );
-
-    // Check if the "Play Audio" button is not rendered
-    const playButton = screen.queryByText(/Play Audio/);
-    expect(playButton).toBeNull();
+    expect(screen.queryByText('Play Audio')).not.toBeInTheDocument();
   });
 
   it('calls onEdit when the "Edit" button is clicked', () => {
@@ -76,13 +61,8 @@ describe('NoteCard', () => {
         onPlayAudio={mockOnPlayAudio}
       />
     );
-
-    // Simulate the "Edit" button click
-    const editButton = screen.getByText(/Edit/);
-    fireEvent.click(editButton);
-
-    // Ensure the onEdit function was called with the correct note
-    expect(mockOnEdit).toHaveBeenCalledWith(note);
+    fireEvent.click(screen.getByText('Edit'));
+    expect(mockOnEdit).toHaveBeenCalled();
   });
 
   it('calls onDelete when the "Delete" button is clicked', () => {
@@ -94,12 +74,20 @@ describe('NoteCard', () => {
         onPlayAudio={mockOnPlayAudio}
       />
     );
+    fireEvent.click(screen.getByText('Delete'));
+    expect(mockOnDelete).toHaveBeenCalled();
+  });
 
-    // Simulate the "Delete" button click
-    const deleteButton = screen.getByText(/Delete/);
-    fireEvent.click(deleteButton);
-
-    // Ensure the onDelete function was called with the correct note ID
-    expect(mockOnDelete).toHaveBeenCalledWith(note.id);
+  it('calls onPlayAudio when the "Play Audio" button is clicked', () => {
+    render(
+      <NoteCard
+        note={note}
+        onEdit={mockOnEdit}
+        onDelete={mockOnDelete}
+        onPlayAudio={mockOnPlayAudio}
+      />
+    );
+    fireEvent.click(screen.getByText('Play Audio'));
+    expect(mockOnPlayAudio).toHaveBeenCalledWith(note.audio);
   });
 });

@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Notes App Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend application for the Notes App, built using React and React Router. The application allows users to authenticate, view notes, and create/edit notes.
 
-## Available Scripts
+## Assumptions
 
-In the project directory, you can run:
+1. **Authentication**: The application assumes that a valid authentication token is stored in the local storage under the key `token`. This token is used to determine if a user is authenticated.
+2. **Routing**: The application uses React Router for client-side routing. It assumes that the user will be redirected to the appropriate pages based on their authentication status.
+3. **Context**: The application uses a `NavigationProvider` context to manage navigation-related state.
 
-### `npm start`
+## Technical Design and Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **App**: The main component that sets up the router and routes.
+- **AuthPage**: The component for the authentication page.
+- **ViewNotesPage**: The component for viewing notes.
+- **CreateEditNotePage**: The component for creating and editing notes.
 
-### `npm test`
+### Routing
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application uses React Router for routing. The routes are defined as follows:
 
-### `npm run build`
+- `/`: Redirects to `/notes` if the user is authenticated, otherwise displays the `AuthPage`.
+- `/notes`: Displays the `ViewNotesPage` if the user is authenticated, otherwise redirects to `/`.
+- `/create`: Displays the `CreateEditNotePage` if the user is authenticated, otherwise redirects to `/`.
+- `/edit/:noteId`: Displays the `CreateEditNotePage` if the user is authenticated, otherwise redirects to `/`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Context
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The `NavigationProvider` context is used to manage navigation-related state. This context is wrapped around the `Routes` component in the `App` component.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running and Testing the Application
 
-### `npm run eject`
+### Prerequisites
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Node.js (v14 or higher)
+- npm (v6 or higher)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sweetdream0530/DentalBe.git
+   cd notes-app-frontend
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Install the dependencies:
+   ```bash
+   npm install
 
-## Learn More
+3. Running the Application:
+   ```bash
+   npm start
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   This will start the development server and open the application in your default web browser.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+4. Testing the Application:
+   ```bash
+   npm start
+   ```
+   This will run the test suite and display the results in the terminal.

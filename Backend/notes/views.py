@@ -48,23 +48,3 @@ class NoteAudioUploadView(APIView):
 
         return Response({"message": "Audio uploaded successfully."}, status=status.HTTP_200_OK)
     
-class NoteViewSetTests(APITestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpass123')
-        self.client.login(username='testuser', password='testpass123')
-
-    def test_create_note_success(self):
-        url = reverse('note-list')
-        data = {'title': 'Test Note', 'content': 'Test Content'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Note.objects.count(), 1)
-        self.assertEqual(Note.objects.get().title, 'Test Note')
-        self.assertEqual(Note.objects.get().user, self.user)
-
-    def test_create_note_unauthenticated(self):
-        self.client.logout()
-        url = reverse('note-list')
-        data = {'title': 'Test Note', 'content': 'Test Content'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

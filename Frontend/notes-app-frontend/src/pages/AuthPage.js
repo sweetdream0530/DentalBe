@@ -23,16 +23,18 @@ const AuthPage = () => {
       <h2>{isLogin ? "Login" : "Register"}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>UserName</label>
+          <label htmlFor="username">UserName</label>
           <input
+            id="username"
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             required
           />
         </div>
         <div className="form-group">
-          <label>Password</label>
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -43,7 +45,7 @@ const AuthPage = () => {
       </form>
       <p>
         {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-        <button onClick={toggleMode}>
+        <button type="button" onClick={toggleMode}>
           {isLogin ? "Register" : "Login"}
         </button>
       </p>

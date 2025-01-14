@@ -1,12 +1,9 @@
 from django.test import TestCase
-
-# Create your tests here.
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth.models import User
 from .models import Note
-from io import BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class RegisterViewTests(APITestCase):
@@ -38,12 +35,12 @@ class RegisterViewTests(APITestCase):
 class NoteAudioUploadViewTests(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass123')
-        self.note = Note.objects.create(title='Test Note', content='Test Content', user=self.user)
-        self.client.login(username='testuser', password='testpass123')
+        self.note = Note.objects.create(title='Test Note', description='Test description', user=self.user)
+        self.client.force_authenticate(user=self.user)
 
     def test_upload_audio_success(self):
         url = reverse('note-audio-upload', args=[self.note.id])
-        audio_file = SimpleUploadedFile("file.mp3", b"file_content", content_type="audio/mpeg")
+        audio_file = SimpleUploadedFile("file.mp3", b"file_description", content_type="audio/mpeg")
         data = {'audio': audio_file}
         response = self.client.post(url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -55,3 +52,25 @@ class NoteAudioUploadViewTests(APITestCase):
         data = {}
         response = self.client.post(url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+class NoteViewSetTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+    def test_create_note_success(self):
+        url = reverse('note-list')
+        data = {'title': 'Test Note', 'description': 'Test description'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Note.objects.count(), 1)
+        self.assertEqual(Note.objects.get().title, 'Test Note')
+        self.assertEqual(Note.objects.get().user, self.user)
+
+    def test_create_note_unauthenticated(self):
+        self.client.logout()
+        url = reverse('note-list')
+        data = {'title': 'Test Note', 'description': 'Test description'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
